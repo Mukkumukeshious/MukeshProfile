@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PiChatDotsDuotone } from "react-icons/pi";
 import { IoIosClose, IoIosMenu } from "react-icons/io";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navLinks = [
     { name: "Home", href: "#" },
@@ -12,6 +13,18 @@ const Navbar = () => {
     { name: "Resume", href: "#resume" },
     { name: "Contact", href: "#contact" },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPostion = window.scrollY;
+      setIsScrolled(scrollPostion > 50);
+    }
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -22,14 +35,14 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full transition-all duration-500 ease-out">
+    <header className={`fixed top-0 left-0 w-full transition-all duration-500 ease-out ${isScrolled ? 'bg-white/30 backdrop-blur-lg shadow-sm' : ''}`}>
       <nav className="flex items-center justify-between max-w-6xl mx-auto w-[90%] h-16 py-4">
         <a href="#" className="text-2xl md:text-3xl font-bold mr-6">
           Mukesh<span className="text-primary text-3xl">.</span>
         </a>
 
         {/* Navbar Links */}
-        <div className="hidden min-[825px]:flex items-center gap-4 bg-base shadow-lg opacity-80 px-8 py-4 rounded-full ">
+        <div className={`hidden min-[825px]:flex items-center gap-4 bg-base shadow-lg opacity-80 px-8 py-4 rounded-full ${isScrolled ? 'bg-transparent shadow-none opacity-100' : ''} `}>
           {navLinks.map((link, index) => (
             <a
               key={index}
